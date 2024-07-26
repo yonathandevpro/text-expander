@@ -25,7 +25,7 @@ export default function App() {
         foot on the moon or when rovers were sent to roam around on Mars.
       </TextExpander>
 
-      <TextExpander expanded={true} className="box">
+      <TextExpander buttonInline={false} expanded={true} className="box">
         Space missions have given us incredible insights into our universe and
         have inspired future generations to keep reaching for the stars. Space
         travel is a pretty cool thing to think about. Who knows what we&apos;ll
@@ -36,33 +36,35 @@ export default function App() {
 }
 
 function TextExpander({
-  expanded,
+  expanded = false,
   className,
   collapsedNumWords = 10,
-  expandButtonText,
-  collapseButtonText,
-  buttonColor,
+  expandButtonText = "Show more",
+  collapseButtonText = "Show less",
+  buttonColor = "#1f09cd",
+  buttonInline = true,
   children,
 }) {
-  const [expand, setExpand] = useState(expanded ? expanded : false);
+  const [isExpanded, setIsExpanded] = useState(expanded);
   const style = {
-    color: buttonColor ? buttonColor : "blue",
+    color: buttonColor,
+    display: buttonInline ? "inline" : "block",
+    border: "none",
+    background: "none",
+    fontSize: "inherit",
+    cursor: "pointer",
   };
   return (
     <div className={`${className ? className : ""}`}>
-      {expand ? children : wordShortener(children, collapsedNumWords)}
-      {!expand ? "... " : " "}
+      <span>
+        {isExpanded ? children : wordShortener(children, collapsedNumWords)}
+        {!isExpanded ? "... " : " "}
+      </span>
       <button
         style={style}
-        onClick={() => setExpand((prevState) => !prevState)}
+        onClick={() => setIsExpanded((prevState) => !prevState)}
       >
-        {!expand
-          ? expandButtonText
-            ? expandButtonText
-            : "Show more"
-          : collapseButtonText
-          ? collapseButtonText
-          : "Show less"}
+        {!isExpanded ? expandButtonText : collapseButtonText}
       </button>
     </div>
   );
@@ -84,4 +86,5 @@ TextExpander.propTypes = {
   collapseButtonText: PropTypes.string,
   buttonColor: PropTypes.string,
   children: PropTypes.string,
+  buttonInline: PropTypes.bool,
 };
