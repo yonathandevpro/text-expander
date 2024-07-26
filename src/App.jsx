@@ -38,12 +38,42 @@ export default function App() {
 function TextExpander({
   expanded,
   className,
-  collapsedNumWords,
+  collapsedNumWords = 10,
   expandButtonText,
   collapseButtonText,
   buttonColor,
+  children,
 }) {
-  return <div>TODO</div>;
+  const [expand, setExpand] = useState(expanded ? expanded : false);
+  const style = {
+    color: buttonColor ? buttonColor : "blue",
+  };
+  return (
+    <div className={`${className ? className : ""}`}>
+      {expand ? children : wordShortener(children, collapsedNumWords)}
+      {!expand ? "... " : " "}
+      <button
+        style={style}
+        onClick={() => setExpand((prevState) => !prevState)}
+      >
+        {!expand
+          ? expandButtonText
+            ? expandButtonText
+            : "Show more"
+          : collapseButtonText
+          ? collapseButtonText
+          : "Show less"}
+      </button>
+    </div>
+  );
+}
+
+function wordShortener(sentence, collapsedNumWords) {
+  const displayedSentence = sentence
+    .split(" ")
+    .slice(0, collapsedNumWords)
+    .join(" ");
+  return displayedSentence;
 }
 
 TextExpander.propTypes = {
@@ -53,4 +83,5 @@ TextExpander.propTypes = {
   expandButtonText: PropTypes.string,
   collapseButtonText: PropTypes.string,
   buttonColor: PropTypes.string,
+  children: PropTypes.string,
 };
